@@ -1,82 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>VR Quiz App</title>
+    <meta charset="UTF-8" />
+    <title>VR Quiz</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   </head>
   <body>
-    <a-scene>
-      <!-- Carregar a imagem panorâmica -->
-      <a-sky src="panorama.jpg" rotation="0 -130 0"></a-sky>
+    <a-scene background="color: #ECECEC">
+      <a-assets>
+        <img id="panorama" src="https://example.com/panorama.jpg" crossorigin="anonymous" />
+      </a-assets>
+
+      <!-- Esfera Panorâmica -->
+      <a-sky src="#panorama" rotation="0 -130 0"></a-sky>
 
       <!-- Pergunta -->
-      <a-text value="Qual é a capital da França?" 
-              position="0 2 -3" 
-              width="4"
-              color="white">
-      </a-text>
+      <a-text value="Qual é a capital da França?" position="-1 2 -3" width="6" color="black"></a-text>
 
       <!-- Opções de Resposta -->
-      <a-text value="A) Berlim" 
-              position="-1.5 1.5 -3" 
-              width="4" 
-              color="white"
-              class="option"
-              id="opcaoA">
-      </a-text>
+      <a-entity id="options" position="-1 1.5 -3">
+        <a-box id="option1" class="clickable" position="0 0.3 0" width="1.5" height="0.5" depth="0.1" color="#CCC"
+          text="value: Berlim; color: black; align: center"
+          onclick="checkAnswer(this, false)">
+        </a-box>
 
-      <a-text value="B) Madrid" 
-              position="1.5 1.5 -3" 
-              width="4" 
-              color="white"
-              class="option"
-              id="opcaoB">
-      </a-text>
+        <a-box id="option2" class="clickable" position="0 -0.3 0" width="1.5" height="0.5" depth="0.1" color="#CCC"
+          text="value: Paris; color: black; align: center"
+          onclick="checkAnswer(this, true)">
+        </a-box>
 
-      <a-text value="C) Paris" 
-              position="-1.5 1 -3" 
-              width="4" 
-              color="white"
-              class="option"
-              id="opcaoC">
-      </a-text>
+        <a-box id="option3" class="clickable" position="0 -0.9 0" width="1.5" height="0.5" depth="0.1" color="#CCC"
+          text="value: Madri; color: black; align: center"
+          onclick="checkAnswer(this, false)">
+        </a-box>
 
-      <a-text value="D) Roma" 
-              position="1.5 1 -3" 
-              width="4" 
-              color="white"
-              class="option"
-              id="opcaoD">
-      </a-text>
-
-      <!-- Cursor para seleção -->
-      <a-entity camera look-controls>
-        <a-cursor 
-          color="yellow"
-          fuse="true" 
-          fuse-timeout="1000">
-        </a-cursor>
+        <a-box id="option4" class="clickable" position="0 -1.5 0" width="1.5" height="0.5" depth="0.1" color="#CCC"
+          text="value: Roma; color: black; align: center"
+          onclick="checkAnswer(this, false)">
+        </a-box>
       </a-entity>
+
+      <!-- Feedback de Resposta -->
+      <a-text id="feedback" value="" position="0 0 -2" width="4" color="black" align="center"></a-text>
+
+      <script>
+        function checkAnswer(element, isCorrect) {
+          // Limpar cores das opções
+          document.querySelectorAll('.clickable').forEach((opt) => {
+            opt.setAttribute('color', '#CCC');
+          });
+
+          // Mudar a cor da opção selecionada e definir o feedback
+          if (isCorrect) {
+            element.setAttribute('color', '#0F0'); // Verde para resposta correta
+            document.getElementById('feedback').setAttribute('value', 'Correto!');
+          } else {
+            element.setAttribute('color', '#F00'); // Vermelho para resposta incorreta
+            document.getElementById('feedback').setAttribute('value', 'Errado!');
+          }
+        }
+      </script>
     </a-scene>
-
-    <script>
-      // Adiciona evento de clique nas opções
-      document.querySelector('#opcaoA').addEventListener('click', function () {
-        alert('Resposta Errada!');
-      });
-      
-      document.querySelector('#opcaoB').addEventListener('click', function () {
-        alert('Resposta Errada!');
-      });
-
-      document.querySelector('#opcaoC').addEventListener('click', function () {
-        alert('Resposta Correta!');
-      });
-
-      document.querySelector('#opcaoD').addEventListener('click', function () {
-        alert('Resposta Errada!');
-      });
-    </script>
   </body>
 </html>
