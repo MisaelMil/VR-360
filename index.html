@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="UTF-8">
     <title>VR Quiz App</title>
@@ -69,7 +69,6 @@
           opcoes: ["Manaus", "Maranhão", "Pará", "Roraima"],
           correta: 2
         },
-        // Perguntas adicionais
         {
           pergunta: "Quantos anos duram, em média, as placas solares mantendo boa eficiência?",
           opcoes: ["10 anos", "15 anos", "20 anos", "25 anos"],
@@ -84,32 +83,11 @@
             "Gera energia a partir de espelhos"
           ],
           correta: 2
-        },
-        {
-          pergunta: "Como funciona a energia maremotriz?",
-          opcoes: [
-            "É gerada a partir do movimento das ondas",
-            "É gerada a partir da transformação do movimento das marés e das correntes do mar em eletricidade",
-            "Transforma o sal da água do mar em energia",
-            "Gera eletricidade a partir da pressão submarina"
-          ],
-          correta: 1
-        },
-        {
-          pergunta: "Quais são os estados brasileiros que mais produzem energia eólica?",
-          opcoes: [
-            "Minas Gerais e São Paulo",
-            "Pará e Maranhão",
-            "Pernambuco e Alagoas",
-            "Rio Grande do Norte e Bahia"
-          ],
-          correta: 3
         }
       ];
 
       let perguntaAtual = 0;
 
-      // Função para atualizar a pergunta e opções
       function atualizarPergunta() {
         const pergunta = perguntas[perguntaAtual];
         document.getElementById("pergunta").setAttribute("value", pergunta.pergunta);
@@ -117,32 +95,21 @@
         document.getElementById("opcaoB").setAttribute("value", `B) ${pergunta.opcoes[1]}`);
         document.getElementById("opcaoC").setAttribute("value", `C) ${pergunta.opcoes[2]}`);
         document.getElementById("opcaoD").setAttribute("value", `D) ${pergunta.opcoes[3]}`);
-        // Restaura a cor original das opções
         document.getElementById("opcaoA").setAttribute("color", "white");
         document.getElementById("opcaoB").setAttribute("color", "white");
         document.getElementById("opcaoC").setAttribute("color", "white");
         document.getElementById("opcaoD").setAttribute("color", "white");
       }
 
-      // Função para tocar um som
-      function tocarSom(audioId) {
-        const audio = new Audio(audioId);
-        audio.play();
-      }
-
-      // Função para verificar a resposta
       function verificarResposta(opcaoIndex) {
         const respostaCorreta = perguntas[perguntaAtual].correta;
         const idCorreta = ["opcaoA", "opcaoB", "opcaoC", "opcaoD"][respostaCorreta];
-        
-        // Destaca a resposta correta em azul
         document.getElementById(idCorreta).setAttribute("color", "blue");
 
         if (opcaoIndex === respostaCorreta) {
           tocarSom("success.mp3");
         }
 
-        // Avança para a próxima pergunta após um intervalo
         setTimeout(() => {
           perguntaAtual++;
           if (perguntaAtual < perguntas.length) {
@@ -151,27 +118,28 @@
             document.getElementById("pergunta").setAttribute("value", "Você completou todas as perguntas!");
             tocarSom("aprendeu.mp3");
           }
-        }, 2000); // Espera de 2 segundos antes de mudar de pergunta
+        }, 2000);
       }
 
-      // Adiciona eventos de clique nas opções
-      document.querySelector('#opcaoA').addEventListener('click', function () {
-        verificarResposta(0);
-      });
-      
-      document.querySelector('#opcaoB').addEventListener('click', function () {
-        verificarResposta(1);
+      // Eventos de clique nas opções
+      const opcoes = ["opcaoA", "opcaoB", "opcaoC", "opcaoD"];
+      opcoes.forEach((id, index) => {
+        const opcaoEl = document.getElementById(id);
+
+        // Evento de clique
+        opcaoEl.addEventListener("click", () => {
+          verificarResposta(index);
+        });
+
+        // Evento para aumentar o tamanho ao focar com o cursor
+        opcaoEl.addEventListener("mouseenter", () => {
+          opcaoEl.setAttribute("scale", "1.2 1.2 1");
+        });
+        opcaoEl.addEventListener("mouseleave", () => {
+          opcaoEl.setAttribute("scale", "1 1 1");
+        });
       });
 
-      document.querySelector('#opcaoC').addEventListener('click', function () {
-        verificarResposta(2);
-      });
-
-      document.querySelector('#opcaoD').addEventListener('click', function () {
-        verificarResposta(3);
-      });
-
-      // Inicializa a primeira pergunta
       atualizarPergunta();
     </script>
   </body>
