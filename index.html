@@ -35,6 +35,11 @@
         <a-text value="D) Roraima" color="white" width="4" position="0 0 0.1" id="opcaoD"></a-text>
       </a-plane>
 
+      <!-- Botao Reiniciar (inicialmente invisivel) -->
+      <a-plane id="reiniciar-plane" position="0 0.5 -3" width="2.5" height="0.5" opacity="0" visible="false">
+        <a-text value="Reiniciar" color="yellow" width="3" position="0 0 0.1"></a-text>
+      </a-plane>
+
       <!-- Cursor com animacao de carregamento -->
       <a-entity camera look-controls>
         <a-cursor 
@@ -49,7 +54,6 @@
     </a-scene>
 
     <script>
-      // Array de perguntas e respostas
       const perguntas = [
         {
           pergunta: "Caratateua fica em que Estado?",
@@ -70,32 +74,11 @@
             "Gera energia a partir de espelhos"
           ],
           correta: 2
-        },
-        {
-          pergunta: "Como funciona a energia maremotriz?",
-          opcoes: [
-            "Gerada a partir do movimento das ondas",
-            "Gerada a partir da transformacao do movimento das mares e das correntes do mar em eletricidade",
-            "Transforma o sal da agua do mar em energia",
-            "Gera eletricidade a partir da pressao submarina"
-          ],
-          correta: 1
-        },
-        {
-          pergunta: "Quais sao os estados brasileiros que mais produzem energia eolica?",
-          opcoes: [
-            "Minas Gerais e Sao Paulo",
-            "Para e Maranhao",
-            "Pernambuco e Alagoas",
-            "Rio Grande do Norte e Bahia"
-          ],
-          correta: 3
         }
       ];
 
       let perguntaAtual = 0;
 
-      // Funcao para atualizar a pergunta e opcoes
       function atualizarPergunta() {
         const pergunta = perguntas[perguntaAtual];
         document.getElementById("pergunta").setAttribute("value", pergunta.pergunta);
@@ -103,43 +86,48 @@
         document.getElementById("opcaoB").setAttribute("value", `B) ${pergunta.opcoes[1]}`);
         document.getElementById("opcaoC").setAttribute("value", `C) ${pergunta.opcoes[2]}`);
         document.getElementById("opcaoD").setAttribute("value", `D) ${pergunta.opcoes[3]}`);
-        // Restaura a cor original das opcoes
         document.getElementById("opcaoA").setAttribute("color", "white");
         document.getElementById("opcaoB").setAttribute("color", "white");
         document.getElementById("opcaoC").setAttribute("color", "white");
         document.getElementById("opcaoD").setAttribute("color", "white");
       }
 
-      // Funcao para verificar a resposta
       function verificarResposta(opcaoIndex) {
         const respostaCorreta = perguntas[perguntaAtual].correta;
         const idCorreta = ["opcaoA", "opcaoB", "opcaoC", "opcaoD"][respostaCorreta];
         
         if (opcaoIndex === respostaCorreta) {
-          // Destaca a resposta correta em azul
           document.getElementById(idCorreta).setAttribute("color", "blue");
           document.getElementById(idCorreta).setAttribute("width", "5");
         } else {
-          // Destaca a resposta correta em azul
           document.getElementById(idCorreta).setAttribute("color", "blue");
           document.getElementById(idCorreta).setAttribute("width", "5");
         }
 
-        // Avanca para a proxima pergunta apos um intervalo
         setTimeout(() => {
           perguntaAtual++;
           if (perguntaAtual < perguntas.length) {
             atualizarPergunta();
           } else {
-            document.getElementById("pergunta").setAttribute("value", "Voce completou todas as perguntas!");
-            document.getElementById("fundo").setAttribute("src", "orla.jpg"); // Carrega a imagem "orla" ao finalizar
+            finalizarQuiz();
           }
-          // Recentraliza o cursor
           document.querySelector('[camera]').setAttribute('rotation', {x: 0, y: 0, z: 0});
-        }, 1000); // Espera de 1 segundo antes de mudar de pergunta
+        }, 1000);
       }
 
-      // Adiciona eventos de clique nas opcoes
+      function finalizarQuiz() {
+        document.getElementById("pergunta").setAttribute("value", "Voce completou todas as perguntas!");
+        document.getElementById("fundo").setAttribute("src", "orla.jpg");
+        document.getElementById("reiniciar-plane").setAttribute("visible", "true");
+      }
+
+      function reiniciarQuiz() {
+        perguntaAtual = 0;
+        atualizarPergunta();
+        document.getElementById("reiniciar-plane").setAttribute("visible", "false");
+        document.getElementById("fundo").setAttribute("src", "carata.jpg");
+      }
+
       document.querySelector('#opcaoA-plane').addEventListener('click', function () {
         verificarResposta(0);
       });
@@ -156,7 +144,10 @@
         verificarResposta(3);
       });
 
-      // Inicializa a primeira pergunta
+      document.querySelector('#reiniciar-plane').addEventListener('click', function () {
+        reiniciarQuiz();
+      });
+
       atualizarPergunta();
     </script>
   </body>
